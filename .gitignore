@@ -1,0 +1,12 @@
+# Ignore Terraform state and config files
+.terraform/
+*.tfstate
+*.tfstate.backup
+terraform.tfvars
+
+# Ignore IDE/editor-specific files (optional but good)
+.vscode/
+*.log
+*.swp
+.DS_Store
+
