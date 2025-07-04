@@ -13,6 +13,8 @@ jobs:
     env:
       AWS_REGION: ${{ secrets.AWS_REGION }}
       ECR_REPO: ${{ secrets.ECR_REPOSITORY }}
+      RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
+      RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
 
     steps:
       - name: Checkout code
@@ -42,9 +44,12 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+        working-directory: ./terraform
 
       - name: Terraform Plan
         run: terraform plan -var="rds_password=${{ secrets.RDS_PASSWORD }}" -var="rds_username=${{ secrets.RDS_USERNAME }}"
+        working-directory: ./terraform
 
       - name: Terraform Apply
         run: terraform apply -auto-approve -var="rds_password=${{ secrets.RDS_PASSWORD }}" -var="rds_username=${{ secrets.RDS_USERNAME }}"
+        working-directory: ./terraform
