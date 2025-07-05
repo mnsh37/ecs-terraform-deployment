@@ -113,16 +113,16 @@ data "aws_ssm_parameter" "ecs_ami" {
 #EC2 Instance (Worker Node)
 resource "aws_instance" "ecs_instance" {
   ami                         = data.aws_ssm_parameter.ecs_ami.value
-  instance_type               = "t3.small"
+  instance_type               = "t2.micro" # Free Tier eligible
   subnet_id                   = aws_subnet.public.id
   vpc_security_group_ids      = [aws_security_group.ecs_sg.id]
   iam_instance_profile        = aws_iam_instance_profile.ecs_instance_profile.name
   associate_public_ip_address = true
   key_name                    = "ecs-key"
 
-  user_data = <<EOF
+user_data = <<EOF
 #!/bin/bash
-echo ECS_CLUSTER=${aws_ecs_cluster.main.name} >> /etc/ecs/ecs.config
+echo "ECS_CLUSTER=${aws_ecs_cluster.main.name}" > /etc/ecs/ecs.config
 EOF
 
   tags = {
