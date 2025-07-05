@@ -27,17 +27,19 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Set Image Tag from Commit SHA
+        run: echo "IMAGE_TAG=${GITHUB_SHA}" >> $GITHUB_ENV
+
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build Docker Image
         run: |
-          docker build -t ecs-static-site .
-          docker tag ecs-static-site:latest $ECR_REPO:latest
+          docker build -t ecs-static-site:$IMAGE_TAG .
+          docker tag ecs-static-site:$IMAGE_TAG $ECR_REPO:$IMAGE_TAG
 
       - name: Push to ECR
-        run: |
-          docker push $ECR_REPO:latest
+        run: docker push $ECR_REPO:$IMAGE_TAG
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -47,9 +49,19 @@ jobs:
         working-directory: ./terraform
 
       - name: Terraform Plan
-        run: terraform plan -var="rds_password=${{ secrets.RDS_PASSWORD }}" -var="rds_username=${{ secrets.RDS_USERNAME }}"
+        run: |
+          terraform plan \
+            -var="rds_password=${{ secrets.RDS_PASSWORD }}" \
+            -var="rds_username=${{ secrets.RDS_USERNAME }}" \
+            -var="image_tag=$IMAGE_TAG" \
+            -var="ecr_repo=$ECR_REPO"
         working-directory: ./terraform
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -var="rds_password=${{ secrets.RDS_PASSWORD }}" -var="rds_username=${{ secrets.RDS_USERNAME }}"
+        run: |
+          terraform apply -auto-approve \
+            -var="rds_password=${{ secrets.RDS_PASSWORD }}" \
+            -var="rds_username=${{ secrets.RDS_USERNAME }}" \
+            -var="image_tag=$IMAGE_TAG" \
+            -var="ecr_repo=$ECR_REPO"
         working-directory: ./terraform

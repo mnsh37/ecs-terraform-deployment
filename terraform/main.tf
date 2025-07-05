@@ -135,17 +135,17 @@ resource "aws_ecs_task_definition" "my_task" {
   family                   = "ecs-static-task"
   requires_compatibilities = ["EC2"]
   network_mode             = "bridge"
-  cpu                      = "257"
+  cpu                      = "256"
   memory                   = "512"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
 
 container_definitions = jsonencode([
   {
     name      = "ecs-static-container",
-    image     = "566849586552.dkr.ecr.us-east-1.amazonaws.com/ecs-static-site:latest",
+    image = "${var.ecr_repo}:${var.image_tag}"
     essential = true,
     memory    = 512,
-    cpu       = 257,
+    cpu       = 256,
     portMappings = [
       {
         containerPort = 80,
