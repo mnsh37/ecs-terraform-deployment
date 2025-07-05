@@ -3,7 +3,7 @@
 This project demonstrates how to deploy a containerized static website using **Amazon ECS (EC2 launch type)**, **Terraform**, and **GitHub Actions** for CI/CD. Everything is fully automated, from infrastructure provisioning to Docker image deployment — built from scratch by a solo DevOps engineer (me!).
 
 ---
-
+```bash
 ## 📁 What’s Inside
 
 - **Terraform IaC** for:
@@ -49,7 +49,7 @@ Every push to the `main` branch triggers:
 
 ## 🧪 How to Test Locally
 
-```bash
+
 # Build the Docker image
 docker build -t ecs-static-site .
 
@@ -69,6 +69,7 @@ ECR_REPOSITORY (e.g. 566849586552.dkr.ecr.us-east-1.amazonaws.com/ecs-static-sit
 RDS_USERNAME
 RDS_PASSWORD
 
+```
 🧠 Lessons Learned
 ECR + ECS works great for tightly controlled deployments
 EC2 launch type gives more control than Fargate (useful for EFS setup)
