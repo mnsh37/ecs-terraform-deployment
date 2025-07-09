@@ -79,4 +79,4 @@ GitHub Actions makes it dead-simple to create a deploy pipeline
 🙋‍♂️ Built By
 Manish Kumar
 DevOps Engineer | AWS & Terraform Certified
-📫 LinkedIn | Open to roles, collaborations, or just tech talk.
+Open to roles, collaborations, or just tech talk.
